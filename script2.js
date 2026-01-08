@@ -769,7 +769,7 @@ function handleCommand(raw) {
       break;
     case "open github":
       appendCmdLine("Opening GitHub in a new tab...");
-      window.open("https://github.com/Andrew-Fernando-15", "_blank");
+      window.open("https://github.com/Andrew-Fernando-15/", "_blank");
       appendPrompt();
       break;
     case "open portfolio":
