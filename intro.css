@@ -8,6 +8,7 @@ html,
 body {
   height: 100%;
   font-family: sans-serif;
+  background: #000000;   /* force black for entire document */
 }
 
 #loading-screen {
