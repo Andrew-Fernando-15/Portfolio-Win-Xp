@@ -22,7 +22,6 @@ https://andrew-fernando-15.github.io/Portfolio-Win-Xp-/
 - In‑browser **Command Prompt** with:
   - Built‑in commands (`help`, `clear`, `time`, `date`, `about`, `open github`, `open portfolio`, etc.)
   - A small knock‑knock mini‑game
-  - Hidden fun commands like `flirt`, `rickroll`, `matrix`
 
 ---
 
