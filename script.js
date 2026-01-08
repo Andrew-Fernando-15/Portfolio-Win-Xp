@@ -9,7 +9,7 @@ const POWER_PATH = "Tricked.html";    // power off page
 // When user clicks the Administrator tile:
 userTile.addEventListener("click", () => {
   // Show welcome.png as full-screen background
-  lockScreen.style.backgroundImage = 'url("images/welcome.png")';
+  lockScreen.style.backgroundImage = 'url("images/welcome-xp.png")';
 
   // Optionally remove the tile and power controls while welcome shows
   userTile.style.display = "none";
