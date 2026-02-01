@@ -6,6 +6,8 @@
 const iconGit = document.getElementById("icon-git");
 const iconCV = document.getElementById("icon-cv");
 const iconPortfolio = document.getElementById("icon-portfolio");
+const iconFlower = document.getElementById("icon-flower");
+const iconAbout = document.getElementById("icon-about");
 
 // CV window + taskbar button
 const cvWindow = document.getElementById("cv-window");
@@ -23,6 +25,7 @@ const cvZoomOut = document.getElementById("cv-zoom-out");
 const startButton = document.getElementById("start-button");
 const startMenu = document.getElementById("start-menu");
 const trayDate = document.querySelector(".tray-date");
+const trayTime = document.querySelector(".tray-time");
 
 // Git confirm window
 const gitConfirmWindow = document.getElementById("git-confirm-window");
@@ -31,48 +34,39 @@ const gitConfirmClose = document.getElementById("git-confirm-close");
 const gitConfirmYes = document.getElementById("git-confirm-yes");
 const gitConfirmCancel = document.getElementById("git-confirm-cancel");
 
+// Flower confirm window
+const flowerConfirmWindow = document.getElementById("flower-confirm-window");
+const flowerConfirmTitlebar = document.getElementById("flower-confirm-titlebar");
+const flowerConfirmClose = document.getElementById("flower-confirm-close");
+const flowerConfirmYes = document.getElementById("flower-confirm-yes");
+const flowerConfirmCancel = document.getElementById("flower-confirm-cancel");
+const taskFlower = document.getElementById("task-flower");
+
 // Portfolio confirm window
-const portfolioConfirmWindow = document.getElementById(
-  "portfolio-confirm-window"
-);
-const portfolioConfirmTitlebar = document.getElementById(
-  "portfolio-confirm-titlebar"
-);
-const portfolioConfirmClose = document.getElementById(
-  "portfolio-confirm-close"
-);
+const portfolioConfirmWindow = document.getElementById("portfolio-confirm-window");
+const portfolioConfirmTitlebar = document.getElementById("portfolio-confirm-titlebar");
+const portfolioConfirmClose = document.getElementById("portfolio-confirm-close");
 const portfolioConfirmYes = document.getElementById("portfolio-confirm-yes");
-const portfolioConfirmCancel = document.getElementById(
-  "portfolio-confirm-cancel"
-);
+const portfolioConfirmCancel = document.getElementById("portfolio-confirm-cancel");
 
 // Instagram confirm window
-const instagramConfirmWindow = document.getElementById(
-  "instagram-confirm-window"
-);
-const instagramConfirmTitlebar = document.getElementById(
-  "instagram-confirm-titlebar"
-);
-const instagramConfirmClose = document.getElementById(
-  "instagram-confirm-close"
-);
+const instagramConfirmWindow = document.getElementById("instagram-confirm-window");
+const instagramConfirmTitlebar = document.getElementById("instagram-confirm-titlebar");
+const instagramConfirmClose = document.getElementById("instagram-confirm-close");
 const instagramConfirmYes = document.getElementById("instagram-confirm-yes");
-const instagramConfirmCancel = document.getElementById(
-  "instagram-confirm-cancel"
-);
+const instagramConfirmCancel = document.getElementById("instagram-confirm-cancel");
 
 // LinkedIn confirm window
-const linkedinConfirmWindow = document.getElementById(
-  "linkedin-confirm-window"
-);
-const linkedinConfirmTitlebar = document.getElementById(
-  "linkedin-confirm-titlebar"
-);
+const linkedinConfirmWindow = document.getElementById("linkedin-confirm-window");
+const linkedinConfirmTitlebar = document.getElementById("linkedin-confirm-titlebar");
 const linkedinConfirmClose = document.getElementById("linkedin-confirm-close");
 const linkedinConfirmYes = document.getElementById("linkedin-confirm-yes");
-const linkedinConfirmCancel = document.getElementById(
-  "linkedin-confirm-cancel"
-);
+const linkedinConfirmCancel = document.getElementById("linkedin-confirm-cancel");
+
+// Contact confirm window
+const contactConfirmWindow = document.getElementById("contact-confirm-window");
+const contactConfirmTitlebar = document.getElementById("contact-confirm-titlebar");
+const contactConfirmClose = document.getElementById("contact-confirm-close");
 
 // About window
 const aboutWindow = document.getElementById("about-window");
@@ -81,12 +75,14 @@ const aboutClose = document.getElementById("about-close");
 const aboutMinimize = document.getElementById("about-minimize");
 const aboutMaximize = document.getElementById("about-maximize");
 
-// Taskbar buttons for popups
+// Taskbar buttons
 const taskGit = document.getElementById("task-git");
 const taskPortfolio = document.getElementById("task-portfolio");
 const taskInstagram = document.getElementById("task-instagram");
 const taskLinkedin = document.getElementById("task-linkedin");
 const taskCmd = document.getElementById("task-cmd");
+const taskAbout = document.getElementById("task-about");
+const taskContact = document.getElementById("task-contact");
 
 // CMD elements
 const cmdWindow = document.getElementById("cmd-window");
@@ -104,11 +100,15 @@ const desktopIcons = document.querySelectorAll(".desktop-icon");
 // Power overlay
 const powerOverlay = document.getElementById("power-overlay");
 
-// Power popup buttons (if you still use these IDs)
+// Power popup buttons
 const popupShutdown = document.getElementById("popup-shutdown");
 const popupRestart = document.getElementById("popup-restart");
 const popupLogoff = document.getElementById("popup-logoff");
 const popupCancel = document.getElementById("popup-cancel");
+
+// Contact (Start menu + hidden mailto helper)
+const startContact = document.getElementById("start-contact");
+const contactMailto = document.getElementById("contact-mailto");
 
 // Z-index management
 let topZ = 50;
@@ -146,10 +146,7 @@ function makeWindowDraggable(win, handle) {
   });
 }
 
-// NOTE: desktop icons are no longer draggable – the makeIconDraggable
-// function has been removed and we do NOT call it anywhere.
-
-// show overlay then navigate (used by older popup buttons)
+// show overlay then navigate
 function showPowerOverlayAndGo(url, delayMs = 1200) {
   if (powerOverlay) {
     powerOverlay.classList.remove("hidden");
@@ -164,25 +161,28 @@ function openPowerPopup() {
   if (powerOverlay) powerOverlay.classList.remove("hidden");
 }
 
-// Power popup button behavior (if you still use these buttons)
+if (popupCancel) {
+  popupCancel.addEventListener("click", () => {
+    if (powerOverlay) powerOverlay.classList.add("hidden");
+  });
+}
+
+// Power popup button behavior
 if (popupShutdown) {
   popupShutdown.addEventListener("click", () => {
     showPowerOverlayAndGo("https://www.google.com");
   });
 }
-
 if (popupRestart) {
   popupRestart.addEventListener("click", () => {
     showPowerOverlayAndGo("index2.html");
   });
 }
-
 if (popupLogoff) {
   popupLogoff.addEventListener("click", () => {
     showPowerOverlayAndGo("index.html");
   });
 }
-
 if (popupCancel) {
   popupCancel.addEventListener("click", () => {
     if (powerOverlay) powerOverlay.classList.add("hidden");
@@ -205,15 +205,15 @@ if (instagramConfirmWindow && instagramConfirmTitlebar) {
 if (linkedinConfirmWindow && linkedinConfirmTitlebar) {
   makeWindowDraggable(linkedinConfirmWindow, linkedinConfirmTitlebar);
 }
+if (contactConfirmWindow && contactConfirmTitlebar) {
+  makeWindowDraggable(contactConfirmWindow, contactConfirmTitlebar);
+}
 if (cmdWindow && cmdTitlebar) {
   makeWindowDraggable(cmdWindow, cmdTitlebar);
 }
 if (aboutWindow && aboutTitlebar) {
   makeWindowDraggable(aboutWindow, aboutTitlebar);
 }
-
-// IMPORTANT: no desktopIcons.forEach(makeIconDraggable) here,
-// so desktop icons stay fixed in their original positions.
 
 // Focus on titlebar mousedown
 if (gitConfirmTitlebar) {
@@ -234,6 +234,11 @@ if (instagramConfirmTitlebar) {
 if (linkedinConfirmTitlebar) {
   linkedinConfirmTitlebar.addEventListener("mousedown", () =>
     bringToFront(linkedinConfirmWindow)
+  );
+}
+if (contactConfirmTitlebar) {
+  contactConfirmTitlebar.addEventListener("mousedown", () =>
+    bringToFront(contactConfirmWindow)
   );
 }
 if (cvWindow) {
@@ -257,9 +262,16 @@ function openCVWindow() {
   bringToFront(cvWindow);
 }
 
+// CLOSE: window + taskbar button
 function closeCVWindow() {
   cvWindow.classList.add("hidden");
   taskCV.classList.add("hidden");
+}
+
+// MINIMIZE: hide window, keep task button
+function minimizeCV() {
+  cvWindow.classList.add("hidden");
+  taskCV.classList.remove("hidden");
 }
 
 cvClose.addEventListener("click", closeCVWindow);
@@ -279,7 +291,7 @@ function maximizeCV() {
     cvWindow.style.left = "0px";
     cvWindow.style.top = "0px";
     cvWindow.style.width = "100vw";
-    cvWindow.style.height = "100vh";
+    cvWindow.style.height = "calc(100vh - 45px)"; // leave space for taskbar
     cvIsMaximized = true;
     cvMaximize.textContent = "🗗";
   } else if (cvStoredRect) {
@@ -290,11 +302,6 @@ function maximizeCV() {
     cvIsMaximized = false;
     cvMaximize.textContent = "▢";
   }
-}
-
-function minimizeCV() {
-  cvWindow.classList.add("hidden");
-  taskCV.classList.remove("hidden");
 }
 
 cvMaximize.addEventListener("click", maximizeCV);
@@ -327,6 +334,10 @@ function openGitConfirm() {
   bringToFront(gitConfirmWindow);
 }
 
+function minimizeGit() {
+  gitConfirmWindow.classList.add("hidden");
+}
+
 function closeGitConfirm() {
   gitConfirmWindow.classList.add("hidden");
   taskGit.classList.add("hidden");
@@ -344,6 +355,10 @@ function openPortfolioConfirm() {
   portfolioConfirmWindow.classList.remove("hidden");
   taskPortfolio.classList.remove("hidden");
   bringToFront(portfolioConfirmWindow);
+}
+
+function minimizePortfolio() {
+  portfolioConfirmWindow.classList.add("hidden");
 }
 
 function closePortfolioConfirm() {
@@ -368,6 +383,10 @@ function openInstagramConfirm() {
   bringToFront(instagramConfirmWindow);
 }
 
+function minimizeInstagram() {
+  instagramConfirmWindow.classList.add("hidden");
+}
+
 function closeInstagramConfirm() {
   instagramConfirmWindow.classList.add("hidden");
   taskInstagram.classList.add("hidden");
@@ -376,7 +395,7 @@ function closeInstagramConfirm() {
 instagramConfirmClose.addEventListener("click", closeInstagramConfirm);
 instagramConfirmCancel.addEventListener("click", closeInstagramConfirm);
 instagramConfirmYes.addEventListener("click", () => {
-  window.open("https://instagram.com/your-instagram-username", "_blank");
+  window.open("https://instagram.com/andrew__263739", "_blank");
   closeInstagramConfirm();
 });
 
@@ -387,6 +406,10 @@ function openLinkedinConfirm() {
   bringToFront(linkedinConfirmWindow);
 }
 
+function minimizeLinkedin() {
+  linkedinConfirmWindow.classList.add("hidden");
+}
+
 function closeLinkedinConfirm() {
   linkedinConfirmWindow.classList.add("hidden");
   taskLinkedin.classList.add("hidden");
@@ -395,30 +418,62 @@ function closeLinkedinConfirm() {
 linkedinConfirmClose.addEventListener("click", closeLinkedinConfirm);
 linkedinConfirmCancel.addEventListener("click", closeLinkedinConfirm);
 linkedinConfirmYes.addEventListener("click", () => {
-  window.open("https://www.linkedin.com/in/your-linkedin-username", "_blank");
+  window.open(
+    "https://www.linkedin.com/in/andrew-fernando-b6362a346/",
+    "_blank"
+  );
   closeLinkedinConfirm();
 });
 
-// About window
+// Contact confirm
+function openContactConfirm() {
+  contactConfirmWindow.classList.remove("hidden");
+  if (taskContact) taskContact.classList.remove("hidden");
+  bringToFront(contactConfirmWindow);
+}
+
+function closeContactConfirm() {
+  contactConfirmWindow.classList.add("hidden");
+  if (taskContact) taskContact.classList.add("hidden");
+}
+
+if (contactConfirmClose)
+  contactConfirmClose.addEventListener("click", closeContactConfirm);
+
+// ===================
+// ABOUT – open/close + maximize/restore
+// ===================
+
+let aboutIsMaximized = false;
+let aboutStoredRect = null;
+
 function openAboutWindow() {
   if (!aboutWindow) return;
+
+  aboutWindow.style.width = "";
+  aboutWindow.style.height = "";
+  aboutWindow.style.left = "160px";
+  aboutWindow.style.top = "80px";
+
   aboutWindow.classList.remove("hidden");
+  if (taskAbout) taskAbout.classList.remove("hidden");
   bringToFront(aboutWindow);
 }
 
 function closeAboutWindow() {
   if (!aboutWindow) return;
   aboutWindow.classList.add("hidden");
+  if (taskAbout) taskAbout.classList.add("hidden");
 }
 
-if (aboutClose) aboutClose.addEventListener("click", closeAboutWindow);
-if (aboutMinimize) aboutMinimize.addEventListener("click", closeAboutWindow);
-
-let aboutIsMaximized = false;
-let aboutStoredRect = null;
+function minimizeAbout() {
+  if (!aboutWindow) return;
+  aboutWindow.classList.add("hidden");
+}
 
 function maximizeAbout() {
   if (!aboutWindow) return;
+
   if (!aboutIsMaximized) {
     const rect = aboutWindow.getBoundingClientRect();
     aboutStoredRect = {
@@ -432,25 +487,36 @@ function maximizeAbout() {
     aboutWindow.style.width = "100vw";
     aboutWindow.style.height = "100vh";
     aboutIsMaximized = true;
-    if (aboutMaximize) aboutMaximize.textContent = "🗗";
+    aboutMaximize.textContent = "🗗";
   } else if (aboutStoredRect) {
     aboutWindow.style.left = aboutStoredRect.left + "px";
     aboutWindow.style.top = aboutStoredRect.top + "px";
     aboutWindow.style.width = aboutStoredRect.width + "px";
     aboutWindow.style.height = aboutStoredRect.height + "px";
     aboutIsMaximized = false;
-    if (aboutMaximize) aboutMaximize.textContent = "▢";
+    aboutMaximize.textContent = "▢";
   }
 }
 
-if (aboutMaximize) {
-  aboutMaximize.addEventListener("click", maximizeAbout);
+if (aboutClose) aboutClose.addEventListener("click", closeAboutWindow);
+if (aboutMinimize) aboutMinimize.addEventListener("click", minimizeAbout);
+if (aboutMaximize) aboutMaximize.addEventListener("click", maximizeAbout);
+
+// Taskbar About button
+if (taskAbout) {
+  taskAbout.addEventListener("click", () => {
+    const hidden = aboutWindow.classList.contains("hidden");
+    if (hidden) openAboutWindow();
+    else minimizeAbout();
+  });
 }
 
 // Desktop icons click
-iconGit.addEventListener("click", openGitConfirm);
-iconPortfolio.addEventListener("click", openPortfolioConfirm);
-iconCV.addEventListener("dblclick", openCVWindow);
+if (iconGit) iconGit.addEventListener("click", openGitConfirm);
+if (iconPortfolio) iconPortfolio.addEventListener("click", openPortfolioConfirm);
+if (iconCV) iconCV.addEventListener("click", openCVWindow);
+if (iconFlower) iconFlower.addEventListener("click", openFlowerConfirm);
+if (iconAbout) iconAbout.addEventListener("click", openAboutWindow);
 
 // Taskbar CV button
 taskCV.addEventListener("click", () => {
@@ -462,32 +528,36 @@ taskCV.addEventListener("click", () => {
 // Taskbar popup buttons
 if (taskGit) {
   taskGit.addEventListener("click", () => {
-    if (gitConfirmWindow.classList.contains("hidden")) openGitConfirm();
-    else bringToFront(gitConfirmWindow);
+    const isHidden = gitConfirmWindow.classList.contains("hidden");
+    if (isHidden) openGitConfirm();
+    else minimizeGit();
   });
 }
-
 if (taskPortfolio) {
   taskPortfolio.addEventListener("click", () => {
-    if (portfolioConfirmWindow.classList.contains("hidden"))
-      openPortfolioConfirm();
-    else bringToFront(portfolioConfirmWindow);
+    const isHidden = portfolioConfirmWindow.classList.contains("hidden");
+    if (isHidden) openPortfolioConfirm();
+    else minimizePortfolio();
   });
 }
-
 if (taskInstagram) {
   taskInstagram.addEventListener("click", () => {
-    if (instagramConfirmWindow.classList.contains("hidden"))
-      openInstagramConfirm();
-    else bringToFront(instagramConfirmWindow);
+    const isHidden = instagramConfirmWindow.classList.contains("hidden");
+    if (isHidden) openInstagramConfirm();
+    else minimizeInstagram();
   });
 }
-
 if (taskLinkedin) {
   taskLinkedin.addEventListener("click", () => {
-    if (linkedinConfirmWindow.classList.contains("hidden"))
-      openLinkedinConfirm();
-    else bringToFront(linkedinConfirmWindow);
+    const isHidden = linkedinConfirmWindow.classList.contains("hidden");
+    if (isHidden) openLinkedinConfirm();
+    else minimizeLinkedin();
+  });
+}
+if (taskContact) {
+  taskContact.addEventListener("click", () => {
+    if (contactConfirmWindow.classList.contains("hidden")) openContactConfirm();
+    else bringToFront(contactConfirmWindow);
   });
 }
 
@@ -523,13 +593,14 @@ startMenu.addEventListener("click", (event) => {
 
 // Start menu items
 const startGithub = document.getElementById("start-github");
-const startportfolio-practice = document.getElementById("start-portfolio-practice");
+const startPortfolio1 = document.getElementById("start-portfolio1");
 const startInstagram = document.getElementById("start-instagram");
 const startLinkedin = document.getElementById("start-linkedin");
-const startAbout = document.getElementById("start-about");
+const startAboutBtn = document.getElementById("start-about");
 const startLogoff = document.getElementById("start-logoff");
 const startRestart = document.getElementById("start-restart");
 const startShutdown = document.getElementById("start-shutdown");
+const startFlower   = document.getElementById("start-flower");
 
 if (startGithub) {
   startGithub.addEventListener("click", (event) => {
@@ -537,37 +608,49 @@ if (startGithub) {
     openGitConfirm();
   });
 }
-
-if (startportfolio-practice) {
-  startportfolio-practice.addEventListener("click", (event) => {
+if (startPortfolio1) {
+  startPortfolio1.addEventListener("click", (event) => {
     event.stopPropagation();
     openPortfolioConfirm();
   });
 }
-
 if (startInstagram) {
   startInstagram.addEventListener("click", (event) => {
     event.stopPropagation();
     openInstagramConfirm();
   });
 }
-
 if (startLinkedin) {
   startLinkedin.addEventListener("click", (event) => {
     event.stopPropagation();
     openLinkedinConfirm();
   });
 }
-
-if (startAbout) {
-  startAbout.addEventListener("click", (event) => {
+if (startAboutBtn) {
+  startAboutBtn.addEventListener("click", (event) => {
     event.stopPropagation();
     openAboutWindow();
     startMenu.classList.add("hidden");
   });
+
+  if (startFlower) {
+  startFlower.addEventListener("click", (event) => {
+    event.stopPropagation();           // so Start menu doesn’t close first
+    startMenu.classList.add("hidden"); // hide Start menu
+    openFlowerConfirm();               // reuse existing popup
+  });
 }
 
-// Start-menu power tiles now open popup instead of navigating directly
+}
+
+// Start menu → Contact Me opens Contact popup
+if (startContact) {
+  startContact.addEventListener("click", (event) => {
+    event.stopPropagation();
+    startMenu.classList.add("hidden");
+    openContactConfirm();
+  });
+}
 if (startLogoff) {
   startLogoff.addEventListener("click", (event) => {
     event.stopPropagation();
@@ -575,7 +658,6 @@ if (startLogoff) {
     openPowerPopup();
   });
 }
-
 if (startRestart) {
   startRestart.addEventListener("click", (event) => {
     event.stopPropagation();
@@ -583,7 +665,6 @@ if (startRestart) {
     openPowerPopup();
   });
 }
-
 if (startShutdown) {
   startShutdown.addEventListener("click", (event) => {
     event.stopPropagation();
@@ -593,33 +674,25 @@ if (startShutdown) {
 }
 
 // ===================
-// NEW CMD IMPLEMENTATION (UI-polished)
+// CMD IMPLEMENTATION
 // ===================
 
 let gameState = "none";
+let activeGame = null;          // which mini-game is running
 let currentPromptInput = null;
 let cmdHasBooted = false;
 
-// Focus helper: keep caret in current prompt
-function focusCurrentPrompt() {
-  if (!currentPromptInput) return;
-
-  currentPromptInput.focus();
-
-  // move caret to end
-  const range = document.createRange();
-  const sel = window.getSelection();
-  range.selectNodeContents(currentPromptInput);
-  range.collapse(false);
-  sel.removeAllRanges();
-  sel.addRange(range);
-}
+// List of game starter functions
+const gameStarters = [
+  startKnockGame1,
+  startKnockGame2,
+  startKnockGame3
+];
 
 // Clicking anywhere in CMD body refocuses prompt
 const cmdBody = document.querySelector(".cmd-body");
 if (cmdBody) {
   cmdBody.addEventListener("mousedown", (e) => {
-    // if user clicks directly in input span, let browser handle it
     if (e.target.classList.contains("cmd-prompt-input")) return;
     focusCurrentPrompt();
   });
@@ -631,11 +704,28 @@ const flirtLines = [
   "Are you a playlist? Because somehow you match every mood I did not know I had.",
   "Are you a spoiler alert? Because one look at you and my heart already knows the ending.",
   "Are you a good book? Because I keep wanting just one more chapter with you.",
-  "Are you Wi‑Fi? Because the moment you’re near, everything suddenly connects.",
+  "Are you WiFi? Because the moment youre near, everything suddenly connects.",
   "Are you a checkpoint? Because when you smile, life feels like it just saved my progress.",
-  "Are you a cheat code? Because things feel a little too good when you’re around.",
-  "Are you a star? Because even from a distance, you’re hard not to notice.",
+  "Are you a cheat code? Because things feel a little too good when youre around.",
+  "Are you a star? Because even from a distance, youre hard not to notice.",
   "Are you a bug fix? Because since you showed up, everything makes a lot more sense.",
+];
+
+const jokeLines = [
+  "Why do programmers prefer dark mode? Because light attracts bugs.",
+  "How many programmers does it take to change a light bulb? None - that's a hardware problem.",
+  "Why don't programmers like nature? It has too many bugs.",
+  "Debugging: being the detective in a crime movie where you are also the murderer.",
+  "Why was the computer cold? It left its Windows open.",
+  "What do you get when you cross a computer and a lifeguard? A screensaver.",
+  "Why don't skeletons fight each other? They don't have the guts.",
+  "Why did the scarecrow win an award? He was outstanding in his field.",
+  "Why don't eggs tell jokes? They'd crack each other up.",
+  "Why did the math book look sad? It had too many problems.",
+  "Why can't you trust stairs? They're always up to something.",
+  "What do you call fake spaghetti? An impasta.",
+  "Why was the broom late? It swept in.",
+  "Why don't scientists trust atoms? Because they make up everything."
 ];
 
 function applyCmdColor() {
@@ -645,7 +735,7 @@ function applyCmdColor() {
 }
 applyCmdColor();
 
-function appendCmdLine(text = "") {
+function appendCmdLine(text) {
   const line = document.createElement("div");
   line.textContent = text;
   cmdOutput.appendChild(line);
@@ -657,18 +747,27 @@ function appendBlankLine() {
   appendCmdLine("");
 }
 
-// Create interactive "C:\> " prompt at the current end
+// Focus helper
+function focusCurrentPrompt() {
+  if (!currentPromptInput) return;
+  currentPromptInput.focus();
+  const range = document.createRange();
+  const sel = window.getSelection();
+  range.selectNodeContents(currentPromptInput);
+  range.collapse(false);
+  sel.removeAllRanges();
+  sel.addRange(range);
+}
+
+// Create interactive "C:\> " prompt
 function appendPrompt() {
   const line = document.createElement("div");
-
   const prefix = document.createElement("span");
   prefix.className = "cmd-prompt-prefix";
-  prefix.textContent = "C:\\> ";
-
+  prefix.textContent = "C:\\>";
   const inputSpan = document.createElement("span");
   inputSpan.className = "cmd-prompt-input";
-  inputSpan.contentEditable = "true";
-
+  inputSpan.contentEditable = true;
   line.appendChild(prefix);
   line.appendChild(inputSpan);
   cmdOutput.appendChild(line);
@@ -681,6 +780,7 @@ function appendPrompt() {
     if (e.key === "Enter") {
       e.preventDefault();
       submitCurrentCommand();
+      return;
     }
   });
 
@@ -690,18 +790,19 @@ function appendPrompt() {
 // Boot text + first prompt
 function resetCmdBoot() {
   cmdOutput.innerHTML = "";
-  appendCmdLine("AndrewXP v2.9 [1 Jan]");
+  appendCmdLine("AndrewXP v2.9 1 Jan");
   appendCmdLine("Inspired by Mitchivin");
   appendBlankLine();
-  appendCmdLine('type "Help" for list of commands avalable');
+  appendCmdLine("type Help for list of commands avalable");
   appendCmdLine("press ENTER/RETURN to execute command");
-  appendCmdLine('for i-cursor press Tab')
+  appendCmdLine("for i-cursor press Tab");
   appendBlankLine();
   appendPrompt();
   gameState = "none";
+  activeGame = null;
 }
 
-// Freeze current prompt line as "C:\> command" and handle it
+// Freeze current prompt line and handle it
 function submitCurrentCommand() {
   if (!currentPromptInput) return;
   const commandRaw = currentPromptInput.textContent.trim();
@@ -722,8 +823,17 @@ function handleCommand(raw) {
   const input = raw.trim();
   const lower = input.toLowerCase();
 
-  if (gameState === "knock-sequence") {
-    handleKnockGameStep(lower);
+  // If we are inside a game, route input there
+  if (activeGame === "knock1") {
+    handleKnockGame1Step(lower);
+    return;
+  }
+  if (activeGame === "knock2") {
+    handleKnockGame2Step(lower);
+    return;
+  }
+  if (activeGame === "knock3") {
+    handleKnockGame3Step(lower);
     return;
   }
 
@@ -744,7 +854,6 @@ function handleCommand(raw) {
       break;
     case "version":
       appendCmdLine("AndrewXP Command Prompt v2.9");
-      appendCmdLine("(c) 2026 Andrew Fernando. All rights reserved.");
       appendPrompt();
       break;
     case "time":
@@ -765,11 +874,14 @@ function handleCommand(raw) {
       break;
     case "game":
     case "knock":
-      startKnockGame();
+      startRandomGame();
       break;
     case "open github":
       appendCmdLine("Opening GitHub in a new tab...");
-      window.open("https://github.com/Andrew-Fernando-15/", "_blank");
+      window.open(
+        "https://github.com/Andrew-Fernando-15/Portfolio-Win-Xp-",
+        "_blank"
+      );
       appendPrompt();
       break;
     case "open portfolio":
@@ -800,32 +912,31 @@ function handleCommand(raw) {
 
     default:
       appendCmdLine(
-        `'${input}' is not recognized as an internal or external command.`
+        `"${input}" is not recognized as an internal or external command.`
       );
-      appendCmdLine('Type "help" for the list of available commands.');
+      appendCmdLine("Type help for the list of available commands.");
       appendPrompt();
       break;
   }
 }
 
-// Help output
+// help output
 function printHelp() {
   appendCmdLine("Available commands:");
-  appendCmdLine("  help           - Show this help message");
-  appendCmdLine("  clear          - Clear the screen");
-  appendCmdLine("  exit           - Close the Command Prompt");
-  appendCmdLine("  version        - Show version information");
-  appendCmdLine("  time           - Show the current time");
-  appendCmdLine("  date           - Show the current date");
-  appendCmdLine("  about          - About this mini OS");
-  appendCmdLine("  joke           - Tell a short joke");
-  appendCmdLine("  game / knock   - Start a knock-knock game");
-  appendCmdLine("  open github    - Open GitHub profile");
-  appendCmdLine("  open portfolio - Open portfolio website");
+  appendCmdLine(" help           - Show this help message");
+  appendCmdLine(" clear          - Clear the screen");
+  appendCmdLine(" exit           - Close the Command Prompt");
+  appendCmdLine(" version        - Show version information");
+  appendCmdLine(" time           - Show the current time");
+  appendCmdLine(" date           - Show the current date");
+  appendCmdLine(" about          - About this mini OS");
+  appendCmdLine(" joke           - Tell a short joke");
+  appendCmdLine(" game / knock   - Start a random mini game");
+  appendCmdLine(" open github    - Open GitHub profile");
+  appendCmdLine(" open portfolio - Open portfolio website");
   appendBlankLine();
 }
 
-// Time, date, about, jokes, etc.
 function printTime() {
   const now = new Date();
   appendCmdLine("Current time: " + now.toLocaleTimeString());
@@ -846,8 +957,8 @@ function printAboutCmd() {
 }
 
 function printJoke() {
-  appendCmdLine("Why do programmers prefer dark mode?");
-  appendCmdLine("Because light attracts bugs.");
+  const idx = Math.floor(Math.random() * jokeLines.length);
+  appendCmdLine(jokeLines[idx]);
 }
 
 function printFlirtLine() {
@@ -855,35 +966,112 @@ function printFlirtLine() {
   appendCmdLine(flirtLines[idx]);
 }
 
-// Knock-knock mini-game
-function startKnockGame() {
-  gameState = "knock-sequence";
+// ---------- GAME 1: Knock-knock ("ba") ----------
+function startKnockGame1() {
+  activeGame = "knock1";
+  gameState = "knock1-1";
   appendCmdLine("Knock, knock.");
   appendPrompt();
 }
 
-function handleKnockGameStep(lower) {
-  if (lower === "who's there" || lower === "whos there") {
-    appendCmdLine("Andrew.");
-    appendPrompt();
-    gameState = "knock-sequence-2";
-  } else if (gameState === "knock-sequence-2") {
-    if (lower === "andrew who" || lower === "andrew who?") {
-      appendCmdLine(
-        "Andrew XP — the guy who turned his portfolio into an operating system."
-      );
-      gameState = "none";
+function handleKnockGame1Step(lower) {
+  if (gameState === "knock1-1") {
+    if (lower === "who's there" || lower === "whos there") {
+      appendCmdLine("ba");
+      gameState = "knock1-2";
       appendPrompt();
     } else {
-      appendCmdLine("You were supposed to say: Andrew who?");
+      appendCmdLine('You were supposed to say "Who\'s there?"');
       gameState = "none";
+      activeGame = null;
       appendPrompt();
     }
-  } else {
-    appendCmdLine("You were supposed to say: Who's there?");
+  } else if (gameState === "knock1-2") {
+    if (lower === "ba who" || lower === "ba who?") {
+      appendCmdLine("That's what my mom's gonna call you.");
+    } else {
+      appendCmdLine('You were supposed to say "ba who?"');
+    }
     gameState = "none";
+    activeGame = null;
     appendPrompt();
   }
+}
+
+// ---------- GAME 2: Knock-knock ("Hawaii") ----------
+function startKnockGame2() {
+  activeGame = "knock2";
+  gameState = "knock2-1";
+  appendCmdLine("Knock, knock.");
+  appendPrompt();
+}
+
+function handleKnockGame2Step(lower) {
+  if (gameState === "knock2-1") {
+    if (lower === "who's there" || lower === "whos there") {
+      appendCmdLine("Hawaii");
+      gameState = "knock2-2";
+      appendPrompt();
+    } else {
+      appendCmdLine('You were supposed to say "Who\'s there?"');
+      gameState = "none";
+      activeGame = null;
+      appendPrompt();
+    }
+  } else if (gameState === "knock2-2") {
+    if (lower === "hawaii who" || lower === "hawaii who?") {
+      appendCmdLine("I am fine, how are you?");
+    } else {
+      appendCmdLine('You were supposed to say "Hawaii who?"');
+    }
+    gameState = "none";
+    activeGame = null;
+    appendPrompt();
+  }
+}
+
+// ---------- GAME 3: Knock-knock ("Achu") ----------
+function startKnockGame3() {
+  activeGame = "knock3";
+  gameState = "knock3-1";
+  appendCmdLine("Knock, knock.");
+  appendPrompt();
+}
+
+function handleKnockGame3Step(lower) {
+  if (gameState === "knock3-1") {
+    if (lower === "who's there" || lower === "whos there") {
+      appendCmdLine("Achu");
+      gameState = "knock3-2";
+      appendPrompt();
+    } else {
+      appendCmdLine('You were supposed to say "Who\'s there?"');
+      gameState = "none";
+      activeGame = null;
+      appendPrompt();
+    }
+  } else if (gameState === "knock3-2") {
+    if (lower === "achu who" || lower === "achu who?") {
+      appendCmdLine("God bless you!!");
+    } else {
+      appendCmdLine('You were supposed to say "Achu who?"');
+    }
+    gameState = "none";
+    activeGame = null;
+    appendPrompt();
+  }
+}
+
+// Random game launcher
+function startRandomGame() {
+  if (activeGame) {
+    appendCmdLine("Finish the current game first.");
+    appendPrompt();
+    return;
+  }
+  const idx = Math.floor(Math.random() * gameStarters.length);
+  const startFn = gameStarters[idx];
+  startFn();
 }
 
 // CMD window open/close
@@ -909,13 +1097,11 @@ function closeCmdWindow() {
 }
 
 if (cmdClose) cmdClose.addEventListener("click", closeCmdWindow);
-if (cmdMinimize) {
-  cmdMinimize.addEventListener("click", () => {
-    cmdWindow.classList.add("hidden");
-  });
-}
+if (cmdMinimize)
+  cmdMinimize.addEventListener("click", () =>
+    cmdWindow.classList.add("hidden")
+  );
 
-// CMD maximize/restore
 let cmdIsMaximized = false;
 let cmdStoredRect = null;
 
@@ -947,7 +1133,7 @@ function maximizeCmd() {
 
 if (cmdMaximize) cmdMaximize.addEventListener("click", maximizeCmd);
 
-// Start menu: open CMD from tile
+// Start menu open CMD
 if (startCmd) {
   startCmd.addEventListener("click", (event) => {
     event.stopPropagation();
@@ -956,12 +1142,63 @@ if (startCmd) {
   });
 }
 
-// Show date in tray
-function updateTrayDate() {
+// Tray date/time
+function updateTray() {
   const now = new Date();
   if (trayDate) {
     trayDate.textContent = now.toLocaleDateString();
   }
+  if (trayTime) {
+    trayTime.textContent = now.toLocaleTimeString();
+  }
 }
-updateTrayDate();
-setInterval(updateTrayDate, 60000);
+
+updateTray();
+setInterval(updateTray, 1000);
+
+// Flower window drag + behavior
+if (flowerConfirmWindow && flowerConfirmTitlebar) {
+  makeWindowDraggable(flowerConfirmWindow, flowerConfirmTitlebar);
+}
+if (flowerConfirmTitlebar) {
+  flowerConfirmTitlebar.addEventListener("mousedown", () =>
+    bringToFront(flowerConfirmWindow)
+  );
+}
+
+function openFlowerConfirm() {
+  flowerConfirmWindow.classList.remove("hidden");
+  if (taskFlower) taskFlower.classList.remove("hidden");
+  bringToFront(flowerConfirmWindow);
+}
+
+function minimizeFlower() {
+  flowerConfirmWindow.classList.add("hidden");
+}
+
+function closeFlowerConfirm() {
+  flowerConfirmWindow.classList.add("hidden");
+  if (taskFlower) taskFlower.classList.add("hidden");
+}
+
+if (flowerConfirmClose)
+  flowerConfirmClose.addEventListener("click", closeFlowerConfirm);
+if (flowerConfirmCancel)
+  flowerConfirmCancel.addEventListener("click", closeFlowerConfirm);
+if (flowerConfirmYes) {
+  flowerConfirmYes.addEventListener("click", () => {
+    window.open(
+      "https://andrew-fernando-15.github.io/Click-to-grow-flower/index.html",
+      "_blank"
+    );
+    closeFlowerConfirm();
+  });
+}
+
+if (taskFlower) {
+  taskFlower.addEventListener("click", () => {
+    const isHidden = flowerConfirmWindow.classList.contains("hidden");
+    if (isHidden) openFlowerConfirm();
+    else minimizeFlower();
+  });
+}
