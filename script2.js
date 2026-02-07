@@ -173,21 +173,25 @@ if (popupShutdown) {
     showPowerOverlayAndGo("https://www.google.com");
   });
 }
+
 if (popupRestart) {
   popupRestart.addEventListener("click", () => {
     showPowerOverlayAndGo("index2.html");
   });
 }
+
 if (popupLogoff) {
   popupLogoff.addEventListener("click", () => {
     showPowerOverlayAndGo("index.html");
   });
 }
+
 if (popupCancel) {
   popupCancel.addEventListener("click", () => {
     if (powerOverlay) powerOverlay.classList.add("hidden");
   });
 }
+
 
 // Make windows draggable
 if (gitConfirmWindow && gitConfirmTitlebar) {
@@ -658,11 +662,13 @@ if (startLogoff) {
     openPowerPopup();
   });
 }
+
 if (startRestart) {
   startRestart.addEventListener("click", (event) => {
     event.stopPropagation();
     startMenu.classList.add("hidden");
     openPowerPopup();
+    if (popupRestart) popupRestart.click();
   });
 }
 if (startShutdown) {
@@ -670,8 +676,10 @@ if (startShutdown) {
     event.stopPropagation();
     startMenu.classList.add("hidden");
     openPowerPopup();
+    if (popupShutdown) popupShutdown.click();
   });
 }
+
 
 // ===================
 // CMD IMPLEMENTATION
