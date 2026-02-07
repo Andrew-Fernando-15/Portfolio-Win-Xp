@@ -54,7 +54,7 @@
 /* Fullscreen hint top-left on boot screen */
 .boot-fullscreen-hint {
   position: absolute;
-  bottom: 10px;
+  top: 10px;
   left: 12px;
   padding: 4px 8px;
   font-size: 12px;
@@ -63,4 +63,10 @@
   border-radius: 4px;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
   user-select: none;
+}
+
+.caution {
+  color: #ff5555;
+  font-weight: bold;
+  font-size: 26px;
 }
