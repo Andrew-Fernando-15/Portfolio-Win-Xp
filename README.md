@@ -8,7 +8,7 @@ It recreates the classic XP experience with a Start menu, taskbar, draggable win
 ## 🌐 Live Demo
 
 👉 **Try AndrewXP in your browser:**  
-<a href="https://Andrew-Fernando-15.github.io/Portfolio-Win-Xp/intro.html" target="_blank" rel="noopener noreferrer">View my live portfolio here!</a>
+[View my live portfolio here!](https://Andrew-Fernando-15.github.io/Portfolio-Win-Xp/intro.html)
 
 
 ---
